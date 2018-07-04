@@ -2,7 +2,7 @@
 [![Follow @Ortis95](https://img.shields.io/twitter/follow/Ortis95.svg?style=flat-square)](https://twitter.com/intent/follow?screen_name=Ortis95) 
 
 
-### !NOTE: The Mochimo Farm Manager have been ported to JAVA [here](https://github.com/0rtis/mochimo-farm-manager). This repository will not be updated.
+### IMPORTANT: The Mochimo Farm Manager project have been ported to JAVA [here](https://github.com/0rtis/mochimo-farm-manager). This repository will not be updated.
 
 ## A command center for Mochimo miners
 
