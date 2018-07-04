@@ -1,8 +1,8 @@
-[![GitHub license](https://img.shields.io/github/license/0rtis/mochimo-farm-manager.svg?style=flat-square)](https://github.com/0rtis/mochimo-farm-manager/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/0rtis/mochimo-farm-manager-python.svg?style=flat-square)](https://github.com/0rtis/mochimo-farm-manager-python/blob/master/LICENSE)
 [![Follow @Ortis95](https://img.shields.io/twitter/follow/Ortis95.svg?style=flat-square)](https://twitter.com/intent/follow?screen_name=Ortis95) 
 
 
-### NOTE: The Mochimo Farm Manager have been ported to JAVA [here](https://github.com/0rtis/mochimo-farm-manager/releases). This repository will not be updated.
+### !NOTE: The Mochimo Farm Manager have been ported to JAVA [here](https://github.com/0rtis/mochimo-farm-manager). This repository will not be updated.
 
 ## A command center for Mochimo miners
 
@@ -27,7 +27,7 @@ Mochimo Farm Manager aggregates all mining statistics in a simple web interface 
 *This software is not endorsed by, directly affiliated with, maintained, authorized, or sponsored by the Mochimo Foundation. All product and company names are the registered trademarks of their original owners. The use of any trade name or trademark is for identification and reference purposes only and does not imply any association with the trademark holder of their product brand.*
 
 Mochimo Farm Manager installation:
-1. Download the latest release [here](https://github.com/0rtis/mochimo-farm-manager/releases)
+1. Download the latest release [here](https://github.com/0rtis/mochimo-farm-manager-python/releases)
 2. Install [python3](https://www.python.org/downloads/)
 	* For Ubuntu use `sudo apt-get update`, `sudo apt-get install python3.6`, `sudo apt-get install python3-pip`
 3. Install required module (use`pip3` instead of `pip` in Ubuntu):
