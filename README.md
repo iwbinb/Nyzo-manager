@@ -26,7 +26,7 @@ Nyzo Manager installation:
 	6. `stopCommand`: stop command of the miner. If not specified, a `kill` command is send
 	7. `logCommand`: command to retrieve miner's log.
 5. *Optional*: encrypt your configuration file using **encryption_file.py** command line tool `python encryption_file.py -m e plain_text_mining_farm_config.json encrypted_mining_farm_config.json`
-6. Run the **miner_farm.py** `python miner_farm.py ./html example_mining_farm.json`
+6. Run the **miner_farm.py** `python mining_farm.py ./html example_mining_farm.json`
 7. Access the dashboard http://localhost
 
 ### Miner actions
