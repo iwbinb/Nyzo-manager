@@ -3,22 +3,24 @@
         {
             "id": "miner1",
             "privateKeyPath": null,
-            "host": "192.168.1.101",
-            "user": "user",
-            "password": "mypassword",
-            "startCommand": "/home/user/start.sh",
-            "stopCommand": null,
-            "logCommand": "awk '/: 0x/ {a=$0} END{print a}'  /home/ec2-user/mochi/bin/miner.log && awk '/Solved/ {a=$0} END{print a}'  /home/ec2-user/mochi/bin/miner.log"
+            "host": "",
+            "user": "root",
+            "password": "",
+            "startCommand": "sudo supervisorctl reload",
+            "stopCommand": "sudo supervisorctl stop all",
+            "rebootCommand": "sudo reboot",
+            "logCommand": "tail -c 2000 /var/log/nyzo-verifier-stdout.log && awk '/for height/ {n=split($0,a,\" \")} END{print a[n]}'  /var/log/nyzo-verifier-stdout.log"
         },
         {
             "id": "miner2",
             "privateKeyPath": null,
-            "host": "192.168.2.102",
-            "user": "user",
-            "password": "mypassword",
-            "startCommand": "/home/user/start.sh",
-            "stopCommand": null,
-            "logCommand": "awk '/: 0x/ {a=$0} END{print a}'  /home/ec2-user/mochi/bin/miner.log && awk '/Solved/ {a=$0} END{print a}'  /home/ec2-user/mochi/bin/miner.log"
+            "host": "",
+            "user": "root",
+            "password": "",
+            "startCommand": "sudo supervisorctl reload",
+            "stopCommand": "sudo supervisorctl stop all",
+            "rebootCommand": "sudo reboot",
+            "logCommand": "tail -c 2000 /var/log/nyzo-verifier-stdout.log && awk '/for height/ {n=split($0,a,\" \")} END{print a[n]}'  /var/log/nyzo-verifier-stdout.log"
         }
     ]
 }
