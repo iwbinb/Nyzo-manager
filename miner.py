@@ -140,7 +140,6 @@ class Miner:
 
 		stdin, stdout, stderr = ssh_session.exec_command(self.version_command, timeout=Miner.CMD_TIMEOUT)
 		stderr_str = stderr.read().decode("utf-8")
-
 		if len(stderr_str) > 0:
 			report["version"] = 'Unknown'
 			self.log.warning("Error while fetching version: " + report["version"])
@@ -200,12 +199,16 @@ class Miner:
 					log = re.sub(' +', ' ', log)  # remove consecutive space
 					if "freezing block [" in log:
 						pos = 3
+						posx = 1
+						posy = 1
 						if "v=0" in log:
 							pos = 2
+							posx = 2
+							posy = 5
 
 						buffer = log.split(" ")
 						ibuffer = buffer[pos].split('=')
-						frozen_block = ibuffer[1][:-1]
+						frozen_block = ibuffer[posx][:-posy]
 						report["frozenblock"] = frozen_block
 
 						if "v=0" in log:
