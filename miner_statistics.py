@@ -42,8 +42,9 @@ def get_statistics(miner):
 	statistics["timestamp"] = t
 	statistics["datetime"] = datetime.datetime.utcfromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S UTC')
 	statistics["cpu"] = stat["cpu"]
+	statistics["version"] = stat["version"]
 	statistics["process"] = stat["process"]
-	statistics["gomochi"] = stat["gomochi"]
+	statistics["nyzoVerifier"] = stat["nyzoVerifier"]
 	statistics["listen"] = stat["listen"]
 	statistics["solving"] = stat["solving"]
 
@@ -52,15 +53,15 @@ def get_statistics(miner):
 	else:
 		statistics["block"] = None
 
-	if "Haiku/second" in stat:
-		statistics["hps"] = stat["Haiku/second"]
+	if "frozenblock" in stat:
+		statistics["hps"] = stat["frozenblock"]
 	else:
 		statistics["hps"] = "0"
 
-	if "Solved" in stat:
-		statistics["solved"] = stat["Solved"]
+	if "in_cycle" in stat:
+		statistics["in_cycle"] = stat["in_cycle"]
 	else:
-		statistics["solved"] = "0"
+		statistics["in_cycle"] = "None"
 
 	if "Difficulty" in stat:
 		statistics["difficulty"] = stat["Difficulty"]

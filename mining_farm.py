@@ -83,6 +83,7 @@ class MiningFarm:
 			config.private_key_path = self.__parse_sensitive_field(miner_config, "privateKeyPath", password)
 			config.start_command = self.__parse_sensitive_field(miner_config, "startCommand", password)
 			config.stop_command = self.__parse_sensitive_field(miner_config, "stopCommand", password)
+			config.reboot_command = self.__parse_sensitive_field(miner_config, "rebootCommand", password)
 			config.log_command = self.__parse_sensitive_field(miner_config, "logCommand", password)
 
 			miner = config.build()
@@ -224,6 +225,10 @@ class MiningFarm:
 						self.clear_statistics(miner.miner_id)
 					else:
 						http_request.send_response(500)
+				elif command.upper() == "REBOOT":
+					if miner.reboot():
+						http_request.send_response(200)
+						self.clear_statistics(miner.miner_id)
 				else:
 					http_request.send_response(400)
 					http_request.send_header('Content-type', 'application/json')
@@ -261,9 +266,9 @@ class MiningFarm:
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser(description='Mochimo Farm Manager')
-	parser.add_argument('html_repository', help="The HTML directory")
-	parser.add_argument('farm_file', help="The farm configuration file")
+	parser = argparse.ArgumentParser(description='Nyzo manager')
+	parser.add_argument('html_repository', default="html", help="The HTML directory")
+	parser.add_argument('farm_file', default="example_mining_farm.json", help="The farm configuration file")
 	parser.add_argument('-pwd', dest="password", default=None, help="Farm configuration file password")
 	parser.add_argument('-b', dest="bind", default="127.0.0.1:80", help="Host to bind")
 	parser.add_argument('-hp', dest="http_parallelism", type=int, default=5, help="Number of http handlers")

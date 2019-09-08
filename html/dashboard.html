@@ -2,7 +2,7 @@
 		<head>
 		<script type="text/javascript">
 			
-			document.title = "Mochimo Mining Farm"
+			document.title = "Nyzo manager"
 				
 			function loadMiners()
 			{
@@ -69,31 +69,35 @@
 					cell.dataset.value = cell.innerHTML;
 
 					var cell = row.insertCell(row.cells.length);
-					cell.innerHTML = miner.gomochi;
+					cell.innerHTML = miner.nyzoVerifier;
 					cell.dataset.value = cell.innerHTML;
 
+<!--					var cell = row.insertCell(row.cells.length);-->
+<!--					cell.innerHTML = miner.listen;-->
+<!--					cell.dataset.value = cell.innerHTML;-->
+<!--					-->
+<!--					var cell = row.insertCell(row.cells.length);-->
+<!--					cell.innerHTML = miner.solving;-->
+<!--					cell.dataset.value = cell.innerHTML;-->
+<!--					-->
+<!--					var cell = row.insertCell(row.cells.length);-->
+<!--					cell.innerHTML = miner.block;-->
+<!--					cell.dataset.value = cell.innerHTML;-->
+<!--					-->
+<!--					var cell = row.insertCell(row.cells.length);-->
+<!--					cell.innerHTML = miner.difficulty;-->
+<!--					cell.dataset.value = cell.innerHTML;-->
+
 					var cell = row.insertCell(row.cells.length);
-					cell.innerHTML = miner.listen;
-					cell.dataset.value = cell.innerHTML;
-					
-					var cell = row.insertCell(row.cells.length);
-					cell.innerHTML = miner.solving;
-					cell.dataset.value = cell.innerHTML;
-					
-					var cell = row.insertCell(row.cells.length);
-					cell.innerHTML = miner.block;
-					cell.dataset.value = cell.innerHTML;
-					
-					var cell = row.insertCell(row.cells.length);
-					cell.innerHTML = miner.difficulty;
-					cell.dataset.value = cell.innerHTML;
+					cell.innerHTML = commafy(miner.version);
+					cell.dataset.value = parseFloat(cell.innerHTML);
 					
 					var cell = row.insertCell(row.cells.length);
 					cell.innerHTML = commafy(miner.hps);
 					cell.dataset.value = parseFloat(cell.innerHTML);
 					
 					var cell = row.insertCell(row.cells.length);
-					cell.innerHTML = miner.solved;
+					cell.innerHTML = miner.in_cycle;
 					cell.dataset.value = parseFloat(cell.innerHTML);
 				}
 				
@@ -201,24 +205,25 @@
 	
 	
 	<div id="error" style="color: red;height: 10px;margin-top:5px"></div>
-	<div id="totalHPS" style="margin-top: 5px"></div>
-	<div id="totalSolved" style="margin-top: 5px"></div>
-	<div id="solvingRate" style="margin-top: 5px"></div>
+	<div>Consider donating: 219f1bfef7d50b0c-4cf68c1444797277-524fee14e5be7a1e-df4bf46827680183</div>
+	<div id="totalHPS" style="margin-top: 5px; display:none;"></div>
+	<div id="totalSolved" style="margin-top: 5px; display:none;"></div>
+	<div id="solvingRate" style="margin-top: 5px; display:none;"></div>
 		<table id="miner-table" style="margin-top: 10px">
 			<thead>
 				<tr>
-					<th onclick="sortTable(this);">Id</th>
+					<th onclick="sortTable(this);">ID</th>
 					<th onclick="sortTable(this);">Host</th>
 					<th onclick="sortTable(this);">User</th>
 					<th onclick="sortTable(this);">CPU (%)</th>
 					<th onclick="sortTable(this);">Process</th>
-					<th onclick="sortTable(this);">Gomochi</th>
-					<th onclick="sortTable(this);">Listen</th>
-					<th onclick="sortTable(this);">Solving</th>
-					<th onclick="sortTable(this);">Block</th>
-					<th onclick="sortTable(this);">Diff</th>
-					<th onclick="sortTable(this);">HPS</th>
-					<th onclick="sortTable(this);">Solved</th>
+					<th onclick="sortTable(this);">Running</th>
+<!--					<th onclick="sortTable(this);">Listen</th>-->
+<!--					<th onclick="sortTable(this);">Solving</th>-->
+<!--					<th onclick="sortTable(this);">Block</th>-->
+					<th onclick="sortTable(this);">Version</th>
+					<th onclick="sortTable(this);">Frozen edge</th>
+					<th onclick="sortTable(this);">In cycle</th>
 				</tr>
 			</thead>
 			<tbody>

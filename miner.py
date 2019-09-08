@@ -31,7 +31,7 @@ import time
 
 
 class MinerConfig:
-	def __init__(self, miner_id, host, user, password=None, private_key_path=None, start_command=None, stop_command=None, log_command=None):
+	def __init__(self, miner_id, host, user, password=None, private_key_path=None, start_command=None, stop_command=None, log_command=None, reboot_command=None):
 		self.miner_id = miner_id
 		self.host = host
 		self.user = user
@@ -40,6 +40,7 @@ class MinerConfig:
 		self.start_command = start_command
 		self.stop_command = stop_command
 		self.log_command = log_command
+		self.reboot_command = reboot_command
 
 	def build(self):
 		return Miner(self)
@@ -61,6 +62,7 @@ class Miner:
 		self.start_command = config.start_command
 		self.stop_command = config.stop_command
 		self.log_command = config.log_command
+		self.reboot_command = config.reboot_command
 
 		if log is None:
 			self.log = logging.getLogger(self.miner_id)
@@ -84,26 +86,24 @@ class Miner:
 	def stop(self):
 		ssh_session = Miner.__ssh_connect(host=self.host, username=self.user, password=self.password, prv_key_file=self.private_key_path, log=self.log)
 
-		if self.stop_command is None:
-			self.log.info("Stopping with Kill Command (Deal 3 damage. If you have a Beast, deal 5 damage instead.)")
-			# get mochimo pids and kill them all !
-			pids = self.__parse_pids(ssh_session)
-			kill_command = "date"
-			for pid in pids:
-				kill_command += " && kill "+pid
-			ssh_session.exec_command(kill_command)
-		else:
-			self.log.info("Stopping")
-			ssh_session.exec_command(self.stop_command)
+		self.log.info("Stopping")
+		ssh_session.exec_command(self.stop_command)
 
 		time.sleep(3)  # let the process vanish
 		success = len(self.__parse_pids(ssh_session)) == 0
 		ssh_session.close()
 		return success
 
+	def reboot(self):
+		ssh_session = Miner.__ssh_connect(host=self.host, username=self.user, password=self.password, prv_key_file=self.private_key_path, log=self.log)
+		self.log.info("Rebooting")
+		ssh_session.exec_command(self.reboot_command)
+		ssh_session.close()
+		return True
+
 	def state(self):
 		ssh_session = Miner.__ssh_connect(host=self.host, username=self.user, password=self.password, prv_key_file=self.private_key_path, log=self.log)
-		stdin, stdout, stderr = ssh_session.exec_command("ps faux | grep mochi", timeout=Miner.CMD_TIMEOUT)
+		stdin, stdout, stderr = ssh_session.exec_command("ps faux | grep nyzoVerifier", timeout=Miner.CMD_TIMEOUT)
 		stderr_str = stderr.read().decode("utf-8")
 		state = "Unknown"
 
@@ -112,7 +112,7 @@ class Miner:
 		else:
 			stdout_str = stdout.read().decode("utf-8")
 
-			if len(stdout_str.splitlines()) > 0:
+			if len(stdout_str.splitlines()) > 2:
 				state = "Running"
 			else:
 				state = "Stopped"
@@ -125,7 +125,7 @@ class Miner:
 		report = {}
 
 		# parse cpu load
-		stdin, stdout, stderr = ssh_session.exec_command("top -bcn1", timeout=Miner.CMD_TIMEOUT)
+		stdin, stdout, stderr = ssh_session.exec_command("cat /proc/loadavg", timeout=Miner.CMD_TIMEOUT)
 		# stdin, stdout, stderr = ssh_session.exec_command("top -c -b -n 1")
 		stderr_str = stderr.read().decode("utf-8")
 
@@ -133,23 +133,23 @@ class Miner:
 			report["error_cpu_load"] = stderr_str
 			self.log.warning("Error while parsing cpu load: " + report["error_cpu_load"])
 		else:
-			stdout_str = stdout.read().decode("utf-8")
-			for process in stdout_str.splitlines():
+			stdout_list = stdout.read().decode("utf-8").split(' ')
+			print(stdout_list)
+			report["cpu"] = float(stdout_list[1])*100
 
-				if "Cpu(s): " in process:
-					buffer = process[8:].split(",")
-					load = 0
-					for b in buffer:
-						if "id" in b:
-							continue
-						# bb = b.split('%')
-						bb = Miner.TOP_CPU_LOAD_SEPARATOR.split(b.strip())
-						load += float(bb[0].strip())
+		stdin, stdout, stderr = ssh_session.exec_command("grep final /home/ubuntu/nyzoVerifier/src/main/java/co/nyzo/verifier/Version.java", timeout=Miner.CMD_TIMEOUT)
+		stderr_str = stderr.read().decode("utf-8")
 
-					report["cpu"] = float(round(load, 2))
+		if len(stderr_str) > 0:
+			report["version"] = 'Unknown'
+			self.log.warning("Error while fetching version: " + report["version"])
+		else:
+			stdout_list = stdout.read().decode("utf-8").split(' ')
+			version = stdout_list[len(stdout_list)-1].rstrip()[:-1]
+			report["version"] = version
 
 		# parse process with ps faux because top have different behavior across plateform
-		stdin, stdout, stderr = ssh_session.exec_command("ps faux | grep mochi")
+		stdin, stdout, stderr = ssh_session.exec_command("ps faux | grep nyzoVerifier")
 		stderr_str = stderr.read().decode("utf-8")
 
 		if len(stderr_str) > 0:
@@ -161,21 +161,22 @@ class Miner:
 			for process in stdout_str.splitlines():
 				if " grep " in process:
 					continue
-				elif "gomochi" in process:
-					report["process"].append("gomochi")
+				elif "nyzoVerifier" in process:
+					report["process"].append("nyzoVerifier")
 				else:
-					buffer = process.split("mochimo ")
+					buffer = process.split("nyzoVerifier ")
 					if len(buffer) > 1:
 						report["process"].append(str(buffer[1]).strip())
 
 		report["process"].sort()
-		report["gomochi"] = False
+		report["nyzoVerifier"] = False
 		report["listen"] = False
 		report["solving"] = False
 
 		for process in report["process"]:
-			if process == "gomochi":
-				report["gomochi"] = True
+			print(process)
+			if process == "nyzoVerifier":
+				report["nyzoVerifier"] = 'True'
 			elif "listen" in process:
 				report["listen"] = True
 			elif "solving" in process:
@@ -184,6 +185,7 @@ class Miner:
 		if self.log_command is not None:
 			# parse log
 			stdin, stdout, stderr = ssh_session.exec_command(self.log_command, timeout=Miner.CMD_TIMEOUT)
+			# print(stdout.read().decode("utf-8"))
 			stderr_str = stderr.read().decode("utf-8")
 			if len(stderr_str) > 0:
 				report["error_logs"] = stderr_str
@@ -191,16 +193,19 @@ class Miner:
 			else:
 				stdout_str = stdout.read().decode("utf-8")
 				for log in stdout_str.splitlines():
+					print('::',log)
 					log = re.sub(' +', ' ', log)  # remove consecutive space
-					if "Haiku/second:" in log:
-						buffer = log.split()
-						for i in range(0, len(buffer)-1, 2):
-							report[buffer[i][:-1]] = buffer[i+1]
-					elif ": 0x" in log:
-						buffer = log.split(": 0x")
-						buffer = buffer[1].split()[0]
-						report["Block"] = "0x"+buffer
-
+					if "freezing block [" in log:
+						buffer = log.split(" ")
+						ibuffer = buffer[3].split('=')
+						frozen_block = ibuffer[1][:-1]
+						report["frozenblock"] = frozen_block
+						# for i in range(0, len(buffer)-1, 2):
+						# 	report[buffer[i][:-1]] = buffer[i+1]
+						if "v=0" in log:
+							report["in_cycle"] = 'False'
+						else:
+							report["in_cycle"] = 'True'
 
 		ssh_session.close()
 		return report
@@ -210,7 +215,7 @@ class Miner:
 		if ssh_session is None:
 			ssh_session = Miner.__ssh_connect(host=self.host, username=self.user, password=self.password,  prv_key_file=self.private_key_path, log=self.log)
 
-		stdin, stdout, stderr = ssh_session.exec_command("ps faux | grep mochi")
+		stdin, stdout, stderr = ssh_session.exec_command("ps faux | grep nyzoVerifier")
 		stderr_str = stderr.read().decode("utf-8")
 		if len(stderr_str) > 0:
 			raise Exception(stderr_str)

@@ -34,6 +34,7 @@
 					{
 						document.getElementById("startButton").disabled = true;
 						document.getElementById("stopButton").disabled = true;
+						document.getElementById("rebootButton").disabled = true;
 						document.getElementById("helper").innerHTML = "Waiting for statistics...";
 						
 						continue loop;
@@ -41,6 +42,7 @@
 					{
 						document.getElementById("startButton").disabled = false;
 						document.getElementById("stopButton").disabled = false;
+						document.getElementById("rebootButton").disabled = false;
 						document.getElementById("helper").innerHTML = "";
 					}
 					
@@ -73,31 +75,35 @@
 						break;
 
 						case 5://Gomochi
-							cell.innerHTML = miner.gomochi
+							cell.innerHTML = miner.nyzoVerifier
 						break;
 						
-						case 6://Listen
-							cell.innerHTML = miner.listen
-						break;
+<!--						case 6://Listen-->
+<!--							cell.innerHTML = miner.listen-->
+<!--						break;-->
+<!--						-->
+<!--						case 7://Solving-->
+<!--							cell.innerHTML = miner.solving-->
+<!--						break;-->
+<!--						-->
+<!--						case 8://version-->
+<!--							cell.innerHTML = miner.version-->
+<!--						break;-->
+<!--						-->
+<!--						case 9://Difficulty-->
+<!--							cell.innerHTML = miner.difficulty-->
+<!--						break;-->
 						
-						case 7://Solving
-							cell.innerHTML = miner.solving
-						break;
-						
-						case 8://Block
-							cell.innerHTML = miner.block
-						break;
-						
-						case 9://Difficulty
-							cell.innerHTML = miner.difficulty
-						break;
-						
-						case 10://HPS
+						case 6://HPS
 							cell.innerHTML = commafy(miner.hps)
 						break;
 						
-						case 11://Solved
-							cell.innerHTML = miner.solved
+						case 7://Solved
+							cell.innerHTML = miner.in_cycle
+						break;
+
+						case 8://version
+							cell.innerHTML = miner.version
 						break;
 						
 						default:
@@ -158,6 +164,15 @@
 				xmlHttp.send();
 				console.log("stop command http code: "+xmlHttp.status)
 			}
+
+			function reboot()
+			{
+				var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open( "GET", location.origin+"/command?id="+miner_id+"&cmd=reboot", false); // false for synchronous request
+				xmlHttp.send();
+				console.log("reboot command http code: "+xmlHttp.status)
+			}
+
 			
 		</script>
 		<style>
@@ -184,8 +199,10 @@
 	<div id="error" style="color: red;height: 10px;margin-top:10px"></div>
 	
 	<div >
-		<button id="startButton" type="button" onclick="start()">Start</button>
+		<button id="startButton" type="button" onclick="start()">Reload</button>
 		<button id="stopButton" type="button" onclick="stop()">Stop</button>
+		<button id="rebootButton" type="button" onclick="reboot()">Reboot</button>
+		<a href="/">Back to dashboard</a>
 		<div id="helper" style="margin-left: 10px; display: inline-block"></div>
 	</div>
 	
@@ -208,26 +225,27 @@
 				<th align="left">Process</th>
 			</tr>
 			<tr>
-				<th align="left">Gomochi</th>
+				<th align="left">Running</th>
 			</tr>
+<!--			<tr>-->
+<!--				<th align="left">Listen</th>-->
+<!--			</tr>-->
+<!--			<tr>-->
+<!--				<th align="left">Solving</th>-->
+<!--			</tr>-->
+<!--			<tr>-->
+<!--				<th align="left">Block</th>-->
+<!--			</tr>-->
+<!--			<tr>-->
+<!--				<th align="left">Diff</th>-->
+<!--			</tr>-->
 			<tr>
-				<th align="left">Listen</th>
-			</tr>
-			<tr>
-				<th align="left">Solving</th>
-			</tr>
-			<tr>
-				<th align="left">Block</th>
-			</tr>
-			<tr>
-				<th align="left">Diff</th>
-			</tr>
-			<tr>
-				<th align="left">HPS</th>
+				<th align="left">Frozen edge</th>
 			</tr>
 						<tr>
-				<th align="left">Solved</th>
-		</tbody
+							<th align="left">In cycle</th></tr>
+		<tr><th align="left">Version</th></tr>
+		</tbody>
 	</table>
 	
 	</body>
