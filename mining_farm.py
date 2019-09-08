@@ -83,6 +83,7 @@ class MiningFarm:
 			config.private_key_path = self.__parse_sensitive_field(miner_config, "privateKeyPath", password)
 			config.start_command = self.__parse_sensitive_field(miner_config, "startCommand", password)
 			config.stop_command = self.__parse_sensitive_field(miner_config, "stopCommand", password)
+			config.version_command = self.__parse_sensitive_field(miner_config, "versionCommand", password)
 			config.reboot_command = self.__parse_sensitive_field(miner_config, "rebootCommand", password)
 			config.log_command = self.__parse_sensitive_field(miner_config, "logCommand", password)
 

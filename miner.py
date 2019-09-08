@@ -61,6 +61,7 @@ class Miner:
 		self.private_key_path = config.private_key_path
 		self.start_command = config.start_command
 		self.stop_command = config.stop_command
+		self.version_command = config.version_command
 		self.log_command = config.log_command
 		self.reboot_command = config.reboot_command
 
@@ -137,7 +138,7 @@ class Miner:
 			print(stdout_list)
 			report["cpu"] = float(stdout_list[1])*100
 
-		stdin, stdout, stderr = ssh_session.exec_command("grep final /home/ubuntu/nyzoVerifier/src/main/java/co/nyzo/verifier/Version.java", timeout=Miner.CMD_TIMEOUT)
+		stdin, stdout, stderr = ssh_session.exec_command(self.version_command, timeout=Miner.CMD_TIMEOUT)
 		stderr_str = stderr.read().decode("utf-8")
 
 		if len(stderr_str) > 0:
@@ -145,7 +146,9 @@ class Miner:
 			self.log.warning("Error while fetching version: " + report["version"])
 		else:
 			stdout_list = stdout.read().decode("utf-8").split(' ')
+			print(stdout_list)
 			version = stdout_list[len(stdout_list)-1].rstrip()[:-1]
+			print(version)
 			report["version"] = version
 
 		# parse process with ps faux because top have different behavior across plateform
@@ -196,12 +199,15 @@ class Miner:
 					print('::',log)
 					log = re.sub(' +', ' ', log)  # remove consecutive space
 					if "freezing block [" in log:
+						pos = 3
+						if "v=0" in log:
+							pos = 2
+
 						buffer = log.split(" ")
-						ibuffer = buffer[3].split('=')
+						ibuffer = buffer[pos].split('=')
 						frozen_block = ibuffer[1][:-1]
 						report["frozenblock"] = frozen_block
-						# for i in range(0, len(buffer)-1, 2):
-						# 	report[buffer[i][:-1]] = buffer[i+1]
+
 						if "v=0" in log:
 							report["in_cycle"] = 'False'
 						else:
