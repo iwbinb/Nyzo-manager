@@ -31,8 +31,11 @@ Nyzo Manager installation:
 
 ### Miner actions
 Reload command = sudo supervisorctl reload
+
 Stop command = sudo supervisorctl stop all
+
 Reboot command = sudo reboot
+
 
 ### Nyzo Manager REST API:
 * http://localhost/status : farm statistics
