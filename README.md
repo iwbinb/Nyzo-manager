@@ -13,10 +13,9 @@ Original code written by [Ortis](https://github.com/0rtis/mochimo-farm-manager),
 Nyzo Manager installation:
 1. Clone repository
 2. Install [python3](https://www.python.org/downloads/)
-	* For Ubuntu use `sudo apt-get update`, `sudo apt-get install python3.6`, `sudo apt-get install python3-pip`
+	* For Ubuntu use `sudo apt-get update && sudo apt-get install -y python3.6 python3-pip`
 3. Install required module (use`pip3` instead of `pip` in Ubuntu):
-	1.  `pip install pycryptodomex` 
-	2.  `pip install paramiko`
+	1.  `pip install pycryptodomex paramiko` 
 4. Create a farm configuration file based on the example `example_mining_farm.json`:
 	1. `id`: unique ID of the miner
 	2. `host`: ip and port for ssh connection. example: `192.168.1.2:22`
